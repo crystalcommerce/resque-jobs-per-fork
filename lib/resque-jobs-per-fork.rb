@@ -35,10 +35,9 @@ module Resque
   class Worker
 
     def perform_with_jobs_per_fork(job)
-      raise "You need to set JOBS_PER_FORK on the command line" unless ENV['JOBS_PER_FORK']
       run_hook :before_perform_jobs_per_fork, self
       jobs_performed ||= 0
-      while jobs_performed < ENV['JOBS_PER_FORK'].to_i do
+      while jobs_performed < jobs_per_fork do
         break if @shutdown
         if jobs_performed == 0
           perform_without_jobs_per_fork(job)
@@ -54,5 +53,10 @@ module Resque
     end
     alias_method :perform_without_jobs_per_fork, :perform
     alias_method :perform, :perform_with_jobs_per_fork
+
+  private
+    def jobs_per_fork
+      @jobs_per_fork ||= ENV.fetch('JOBS_PER_FORK', 1).to_i
+    end
   end
 end
