@@ -7,7 +7,7 @@ You simply specify the number of jobs you want each fork to run using the JOBS_P
 
   QUEUE=* JOBS_PER_FORK=5 rake resque:work
 
-You *have* to specify JOBS_PER_FORK environment variable or else your jobs won't run with this gem
+If you do not specify the JOBS_PER_FORK environment variable, it will default to 1.
 
 This will have each fork 5 jobs, before terminating.
 
